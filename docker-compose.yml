@@ -1,33 +1,24 @@
-x-base: &base
-  restart: unless-stopped
-  networks:
-    - tautulli-l-swarm_default
-
 services:
   tautulli:
-    <<: *base
     image: lscr.io/linuxserver/tautulli:latest
-    container_name: ${CNAME}
-    user: ${PUID}:${PGID}
+    container_name: tautulli-l-swarm
     environment:
-      - TZ=${TZ}
+    - PUID=1000
+    - PGID=1000
+    - TZ=America/Chicago
     volumes:
-      - tautulli-l-swarm_config:/config
+    - tautulli-l-swarm_config:/config
     ports:
-      - target: 8181
-        published: 81
-        protocol: tcp
-        mode: host
+    - target: 8181
+      published: 81
+      protocol: tcp
+      mode: host
     deploy:
-      mode: replicated
-      replicas: 1
       placement:
         constraints:
-          - node.labels.deployment.target.tautulli-l == true
+        - node.labels.deployment.target.tautulli-l == true
       restart_policy:
         condition: on-failure
-
-networks:
-  tautulli-l-swarm_default:
-    external: true
-    name: tautulli-l-swarm_default
+volumes:
+  tautulli-l-swarm_config:
+    name: tautulli-l-swarm_config
