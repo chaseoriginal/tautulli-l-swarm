@@ -10,7 +10,7 @@ services:
     - tautulli-l-swarm_config:/config
     ports:
     - target: 8181
-      published: 81
+      published: 8182
       protocol: tcp
       mode: host
     deploy:
